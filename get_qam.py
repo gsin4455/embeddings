@@ -21,6 +21,7 @@ Classes:
 12) 16QAM,
 13) 32QAM,
 14) 64QAM,
+========
 15) 128QAM,
 16) 256QAM,
 =====
@@ -45,7 +46,7 @@ if __name__== '__main__':
         snr = x['Z']   
 
         #get qam portion of dataset
-        idx = np.arange(12*4096*26,17*4096*26)
+        idx = np.arange(12*4096*26,15*4096*26)
         '''
         len = idx.shape[0]
         print(len)
@@ -57,7 +58,7 @@ if __name__== '__main__':
         print("Finished separating indices")
         '''
         qam_sig = sig[idx,:,:]
-        qam_lab = label[idx,12:17]
+        qam_lab = label[idx,12:15]
         qam_snr = snr[idx,:]
         print("Finished seperating training data")
         ''' 
@@ -67,7 +68,7 @@ if __name__== '__main__':
         print("Finished separating testing data")
         '''
 
-        hf_train = h5py.File('qam_train.hdf5', 'w')
+        hf_train = h5py.File('qam_train3.hdf5', 'w')
         hf_train.create_dataset('X',data=qam_sig)
         hf_train.create_dataset('Y',data=qam_lab)
         hf_train.create_dataset('Z',data=qam_snr)
