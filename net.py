@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-IN_CHAN = 1024
+IN_CHAN = 2
 
 class OrthLinear(nn.Linear):
     def __init__(self, *args, alpha=None,manifold=geoopt.Euclidean(), **kwargs):
@@ -61,14 +61,14 @@ class OrthConv1d(nn.Conv1d):
 class net(nn.Module):
     def __init__(self, classes,manifold):
         super(net, self).__init__()
-        self.conv1 = OrthConv1d(IN_CHAN,64,kernel_size=2,stride=2,padding=2,manifold=manifold)
-        self.conv2 = OrthConv1d(64,96,kernel_size=3,stride=2,padding=2,manifold=manifold)
+        self.conv1 = OrthConv1d(IN_CHAN,64,kernel_size=4,stride=2,padding=0,manifold=manifold)
+        self.conv2 = OrthConv1d(64,96,kernel_size=3,stride=2,padding=0,manifold=manifold)
         self.pool = nn.MaxPool1d(3,stride=2)
 
-        self.conv3 = OrthConv1d(96,128, kernel_size=3, stride=1, padding=2,manifold=manifold)
-        self.conv4 = OrthConv1d(128, 256, kernel_size=3, stride=1, padding=2,manifold=manifold)
+        self.conv3 = OrthConv1d(96,128, kernel_size=3, stride=1, padding=0,manifold=manifold)
+        self.conv4 = OrthConv1d(128, 256, kernel_size=3, stride=1, padding=0,manifold=manifold)
         
-        self.fc = OrthLinear(1280, 48,manifold=manifold)
+        self.fc = OrthLinear(123*256, 48,manifold=manifold)
         self.do = nn.Dropout()
         self.out = OrthLinear(48, classes,manifold=manifold)
 
@@ -101,6 +101,7 @@ if __name__=='__main__':
     opt = geoopt.optim.RiemannianAdam(nn.parameters(),lr=1,stabilize=1)
     opt.zero_grad()
     opt.step()
-    print(nn) 
+    print(nn)
+
     #print(y)
     
